@@ -1,0 +1,16 @@
+name: aoc_2021_day_2_visual
+description: Advent of Code 2021 - Day 2 visual
+version: 1.0.0
+
+environment:
+  sdk: '>=2.14.4 <3.0.0'
+
+dev_dependencies:
+  lints: ^1.0.0
+dependencies: 
+  build_runner: ^2.1.5
+  build_web_compilers: ^3.2.1
+  http: ^0.13.4
+  shelf: ^1.2.0
+  shelf_cors_headers: ^0.1.2
+  shelf_static: ^1.1.0

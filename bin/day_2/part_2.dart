@@ -1,13 +1,6 @@
 import 'dart:math';
 import 'util.dart';
 
-class PointWithAim {
-  final Point point;
-  final int aim;
-
-  const PointWithAim(this.point, this.aim);
-}
-
 void main() async {
   final instructions = await getInstructions();
 

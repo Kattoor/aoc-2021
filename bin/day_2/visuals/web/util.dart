@@ -1,6 +1,6 @@
-import 'dart:io';
-
 import 'dart:math';
+
+import 'package:http/http.dart' as http;
 
 enum Direction { forward, down, up }
 
@@ -36,7 +36,8 @@ class PointWithAim {
 }
 
 Future<List<Instruction>> getInstructions() async {
-  final input = await File('./assets/inputs/day_2.txt').readAsString();
+  final client = http.Client();
+  final input = (await client.get(Uri.http('localhost:8081', '/inputs/day_2.txt'))).body;
   final matches = RegExp(r'(forward|up|down) (\d)+').allMatches(input);
   return matches
       .map((match) => Instruction(
@@ -44,4 +45,12 @@ Future<List<Instruction>> getInstructions() async {
               element.toString().split('.').last == match.group(1)),
           int.parse(match.group(2)!)))
       .toList();
+}
+
+String getImageUrl() => 'http://localhost:8081/submarine.png';
+
+List<List<Point>> zipWithSelfSkip1(List<Point> list) {
+  return [
+    for (int i = 0; i < list.length - 1; i += 1) [list[i], list[i + 1]]
+  ];
 }
