@@ -8,7 +8,7 @@ class OneZeroCount {
 }
 
 Future<List<List<int>>> getDiagnosticReadings() async =>
-    (await File('./assets/inputs/day_3.txt').readAsLines())
+    (await File('../../assets/inputs/day_3.txt').readAsLines())
         .map((line) => line.split('').map(int.parse).toList())
         .toList();
 

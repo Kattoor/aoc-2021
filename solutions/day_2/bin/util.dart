@@ -36,7 +36,7 @@ class PointWithAim {
 }
 
 Future<List<Instruction>> getInstructions() async {
-  final input = await File('./assets/inputs/day_2.txt').readAsString();
+  final input = await File('../../assets/inputs/day_2.txt').readAsString();
   final matches = RegExp(r'(forward|up|down) (\d)+').allMatches(input);
   return matches
       .map((match) => Instruction(

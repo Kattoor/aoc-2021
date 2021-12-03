@@ -10,6 +10,6 @@ void main() async {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET'
       }))
-      .addHandler(createStaticHandler('../../../assets'));
+      .addHandler(createStaticHandler('../../assets'));
   await serve(handler, 'localhost', 8081);
 }

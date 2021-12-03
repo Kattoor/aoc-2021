@@ -3,9 +3,9 @@ import 'dart:html';
 import 'dart:math';
 import 'util.dart';
 
-const submarineWidth = 230;
-const submarineHeight = 224;
-const totalTime = 15000;
+const submarineWidth = 115;
+const submarineHeight = 112;
+const totalTime = 191100;
 
 late int width;
 late int height;
@@ -55,7 +55,6 @@ void main() async {
 
   distances = zipWithSelfSkip1(points)
       .toList()
-      //.map((points) => points[0].distanceTo(points[1]))
       .map((points) => (points[1].x - points[0].x).toDouble())
       .toList();
 
@@ -112,10 +111,6 @@ void clear() {
 }
 
 class Game {
-  static const num gameSpeed = 0;
-
-  num lastTimeStamp = 0;
-
   Submarine submarine = Submarine();
 
   Future run() async {
@@ -123,17 +118,17 @@ class Game {
   }
 
   void update(num delta) {
-    lastTimeStamp = delta;
     clear();
     drawSea();
     submarine.update(delta);
-
     run();
   }
 }
 
 class Submarine {
   Point currentPosition = Point(0, 0);
+  Point currentPositionScaled = Point(0, 0);
+
   double currentAngle = 0;
 
   int pointer = 0;
@@ -151,55 +146,51 @@ class Submarine {
     ctx.fillStyle = 'white';
     ctx.fillText(
         currentPosition.x.toStringAsFixed(0),
-        currentPosition.x * xScale -
+        currentPositionScaled.x -
             ctx.measureText(currentPosition.x.toStringAsFixed(0)).width! -
             20,
         40);
 
     ctx.fillStyle = 'white';
-    ctx.fillText(currentPosition.y.toStringAsFixed(0), 20,
-        currentPosition.y * yScale - 20);
+    ctx.fillText(
+        currentPosition.y.toStringAsFixed(0), 20, currentPositionScaled.y - 20);
   }
 
   void drawPositionLines() {
     final horizontalGradient = ctx.createLinearGradient(0, 0, 0, height)
       ..addColorStop(
-          min(
-              max(0,
-                  (currentPosition.y * yScale - submarineHeight * 2) / height),
+          min(max(0, (currentPositionScaled.y - submarineHeight * 2) / height),
               1),
           '#146B3A')
       ..addColorStop(
-          min(max(0, (currentPosition.y * yScale) / height), 1), '#F8B229')
+          min(max(0, (currentPositionScaled.y) / height), 1), '#F8B229')
       ..addColorStop(
-          min(
-              max(0,
-                  (currentPosition.y * yScale + submarineHeight * 2) / height),
+          min(max(0, (currentPositionScaled.y + submarineHeight * 2) / height),
               1),
           '#146B3A');
 
     final verticalGradient = ctx.createLinearGradient(0, 0, width, 0)
       ..addColorStop(
-          min(max(0, (currentPosition.x * xScale - submarineWidth * 2) / width),
+          min(max(0, (currentPositionScaled.x - submarineWidth * 2) / width),
               1),
           '#146B3A')
       ..addColorStop(
-          min(max(0, (currentPosition.x * xScale) / width), 1), '#F8B229')
+          min(max(0, (currentPositionScaled.x) / width), 1), '#F8B229')
       ..addColorStop(
-          min(max(0, (currentPosition.x * xScale + submarineWidth * 2) / width),
+          min(max(0, (currentPositionScaled.x + submarineWidth * 2) / width),
               1),
           '#146B3A');
 
     ctx.fillStyle = horizontalGradient;
-    ctx.fillRect(currentPosition.x * xScale, 0, 2, height);
+    ctx.fillRect(currentPositionScaled.x, 0, 2, height);
 
     ctx.fillStyle = verticalGradient;
-    ctx.fillRect(0, currentPosition.y * yScale, width, 2);
+    ctx.fillRect(0, currentPositionScaled.y, width, 2);
   }
 
   void drawTracingLine() {
     final gradient = ctx.createLinearGradient(
-        0, 0, currentPosition.x * xScale, currentPosition.y * yScale)
+        0, 0, currentPositionScaled.x, currentPositionScaled.y)
       ..addColorStop(0, '#165B33')
       ..addColorStop(0.2, '#146B3A')
       ..addColorStop(0.5, '#F8B229')
@@ -219,34 +210,22 @@ class Submarine {
   }
 
   void drawSubmarine() {
-    final x = currentPosition.x * xScale;
-    final y = currentPosition.y * yScale;
+    final x = currentPositionScaled.x;
+    final y = currentPositionScaled.y;
     final w = submarineWidth;
     final h = submarineHeight;
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(currentAngle / 180 * pi);
     ctx.translate(-x - w / 2, -y - h / 2);
-    ctx.drawImage(submarineImage, x, y);
+    ctx.drawImageScaled(submarineImage, x, y, submarineWidth, submarineHeight);
     ctx.restore();
-  }
-
-  void drawTree(x, y) {
-    ctx.fillStyle = 'brown';
-    ctx.fillRect(x - submarineWidth / 30, y + submarineHeight / 2 - 2,
-        submarineWidth / 15, -submarineHeight / 4);
-
-    ctx.fillStyle = '#165B33';
-    ctx.beginPath();
-    ctx.moveTo(x - submarineWidth / 10, y + submarineHeight / 5);
-    ctx.lineTo(x, y - submarineHeight / 2 + 2);
-    ctx.lineTo(x + submarineWidth / 10, y + submarineHeight / 5);
-    ctx.fill();
   }
 
   IndicesAndTimeAccumulator? findCurrentPointIndicesWithTimeAccumulator(
       num currentTime) {
     double timeAccumulator = 0;
+
     for (var i = 0; i < timeList.length; i++) {
       if (currentTime >= timeAccumulator &&
           currentTime <= timeAccumulator + timeList[i]) {
@@ -288,6 +267,9 @@ class Submarine {
     } else {
       currentPosition = Point(points.last.x, points.last.y);
     }
+
+    currentPositionScaled =
+        Point(currentPosition.x * xScale, currentPosition.y * yScale);
 
     draw();
   }

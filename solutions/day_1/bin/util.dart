@@ -1,7 +1,7 @@
 import 'dart:io';
 
 Future<List<int>> getDepthReadings() async {
-  return (await File('./assets/inputs/day_1.txt').readAsLines())
+  return (await File('../../assets/inputs/day_1.txt').readAsLines())
       .map(int.parse)
       .toList();
 }
