@@ -2,12 +2,6 @@ import 'dart:io';
 
 enum Position { a, b, c, d, e, f, g }
 
-class Number {
-  List<Position> positions;
-
-  Number(this.positions);
-}
-
 class SignalPattern {
   late List<String> signal;
 
