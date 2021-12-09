@@ -1,0 +1,9 @@
+name: aoc_2021_day_9
+description: Advent of Code 2021 - Day 9
+version: 1.0.0
+
+environment:
+  sdk: '>=2.14.4 <3.0.0'
+
+dev_dependencies:
+  lints: ^1.0.0
