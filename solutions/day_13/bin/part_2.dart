@@ -26,6 +26,6 @@ void printGrid(List<Point<int>> points) {
   }
 
   for (final row in grid) {
-    print(row.map((cell) => cell ? '#' : '.').join(''));
+    print(row.map((cell) => cell ? 'o' : ' ').join(''));
   }
 }
